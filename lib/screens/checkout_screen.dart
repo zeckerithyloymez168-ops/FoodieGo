@@ -7,6 +7,7 @@ import '../providers/language_provider.dart';
 import '../providers/notification_provider.dart';
 import '../providers/order_provider.dart';
 import '../theme/app_theme.dart';
+import '../utils/snack.dart';
 import 'addresses_screen.dart';
 import 'order_success_screen.dart';
 
@@ -320,6 +321,88 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               );
             }),
             const SizedBox(height: 20),
+            // Voucher / Promo Selector Card
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: cart.promoCode != null ? AppColors.emerald600 : AppColors.border,
+                  width: cart.promoCode != null ? 2 : 1,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.confirmation_number_outlined,
+                            color: AppColors.emerald600,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            lang.isKhmer ? 'ប័ណ្ណបញ្ចុះតម្លៃ (Vouchers)' : 'Apply Promo / Voucher',
+                            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      if (cart.promoCode != null)
+                        TextButton(
+                          onPressed: () {
+                            cart.clearPromo();
+                            showAppSnack(context, 'Removed promo code');
+                          },
+                          child: const Text(
+                            'Remove',
+                            style: TextStyle(color: Colors.redAccent, fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      ('FOODIE30', '30% OFF 🔥'),
+                      ('GREEN20', '20% OFF 🌿'),
+                      ('FOOD10', '10% OFF 🍔'),
+                    ].map((v) {
+                      final isApplied = cart.promoCode == v.$1;
+                      return ActionChip(
+                        avatar: Icon(
+                          isApplied ? Icons.check_circle : Icons.local_offer_outlined,
+                          size: 14,
+                          color: isApplied ? Colors.white : AppColors.emerald700,
+                        ),
+                        label: Text('${v.$1} (${v.$2})'),
+                        onPressed: () {
+                          cart.applyPromo(v.$1);
+                          showAppSnack(
+                            context,
+                            'Applied ${v.$1} (${v.$2}) discount! 🎉',
+                          );
+                        },
+                        backgroundColor:
+                            isApplied ? AppColors.emerald600 : AppColors.emerald50,
+                        labelStyle: TextStyle(
+                          color: isApplied ? Colors.white : AppColors.emerald700,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 11,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(

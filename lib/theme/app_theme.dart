@@ -78,6 +78,60 @@ class AppTheme {
       ),
     );
   }
+
+  static ThemeData get dark {
+    final baseTextTheme = ThemeData.dark().textTheme;
+    final kantumruyTheme = GoogleFonts.kantumruyProTextTheme(baseTextTheme);
+
+    return ThemeData(
+      useMaterial3: true,
+      fontFamily: GoogleFonts.kantumruyPro().fontFamily,
+      fontFamilyFallback: const [
+        'Kantumruy Pro',
+        'Khmer OS Battambang',
+        'Siemreap',
+        'Noto Sans Khmer',
+        'Khmer OS',
+        'sans-serif',
+      ],
+      textTheme: kantumruyTheme,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.emerald500,
+        primary: AppColors.emerald500,
+        secondary: AppColors.emerald400,
+        surface: const Color(0xFF1E293B),
+        brightness: Brightness.dark,
+      ),
+      scaffoldBackgroundColor: const Color(0xFF0F172A),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: false,
+        titleTextStyle: GoogleFonts.kantumruyPro(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.emerald600,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          textStyle: GoogleFonts.kantumruyPro(
+            fontSize: 15,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+    );
+  }
 }
+
 
 

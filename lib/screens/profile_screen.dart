@@ -6,6 +6,7 @@ import '../providers/catalog_provider.dart';
 import '../providers/favorites_provider.dart';
 import '../providers/language_provider.dart';
 import '../providers/notification_provider.dart';
+import '../providers/theme_provider.dart';
 import '../services/firebase_bootstrap.dart';
 import '../theme/app_theme.dart';
 import '../utils/snack.dart';
@@ -33,6 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final favCount = context.watch<FavoritesProvider>().count;
     final firebaseOk = FirebaseBootstrap.isReady;
     final lang = context.watch<LanguageProvider>();
+    final theme = context.watch<ThemeProvider>();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -224,7 +226,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 22),
             const Text(
-              'Settings & Language / ការកំណត់',
+              'Settings & Preferences / ការកំណត់',
               style: TextStyle(
                 fontWeight: FontWeight.w800,
                 color: AppColors.textMuted,
@@ -234,6 +236,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 8),
             const LanguageToggleWidget(style: LanguageToggleStyle.tile),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.emerald500.withValues(alpha: 0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    theme.isDarkMode ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+                    color: AppColors.emerald600,
+                  ),
+                ),
+                title: Text(
+                  lang.isKhmer ? 'ម៉ូដងងឹត (Dark Mode)' : 'Dark Mode',
+                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                ),
+                subtitle: Text(
+                  theme.isDarkMode
+                      ? (lang.isKhmer ? 'បើកដំណើរការ' : 'Enabled')
+                      : (lang.isKhmer ? 'បិទដំណើរការ' : 'Disabled'),
+                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                ),
+                trailing: Switch.adaptive(
+                  value: theme.isDarkMode,
+                  activeColor: AppColors.emerald600,
+                  onChanged: (_) => theme.toggleTheme(),
+                ),
+              ),
+            ),
             _tile(
               Icons.location_on_outlined,
               lang.tr('my_addresses'),

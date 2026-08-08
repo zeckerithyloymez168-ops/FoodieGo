@@ -9,6 +9,7 @@ import 'providers/favorites_provider.dart';
 import 'providers/language_provider.dart';
 import 'providers/notification_provider.dart';
 import 'providers/order_provider.dart';
+import 'providers/theme_provider.dart';
 import 'screens/splash_screen.dart';
 import 'services/firebase_bootstrap.dart';
 import 'services/firestore_service.dart';
@@ -48,6 +49,7 @@ class FoodOrderApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
@@ -56,12 +58,14 @@ class FoodOrderApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => CatalogProvider()),
       ],
-      child: Consumer<LanguageProvider>(
-        builder: (context, lang, child) {
+      child: Consumer2<LanguageProvider, ThemeProvider>(
+        builder: (context, lang, theme, child) {
           return MaterialApp(
             title: lang.tr('app_name'),
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: theme.themeMode,
             locale: lang.locale,
             home: const SplashScreen(),
           );
@@ -70,4 +74,5 @@ class FoodOrderApp extends StatelessWidget {
     );
   }
 }
+
 

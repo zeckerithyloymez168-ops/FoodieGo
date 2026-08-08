@@ -20,7 +20,15 @@ class FoodDetailScreen extends StatefulWidget {
 class _FoodDetailScreenState extends State<FoodDetailScreen> {
   int _qty = 1;
   String? _size = 'Regular';
+  final Set<String> _selectedToppings = {};
   final _note = TextEditingController();
+
+  final _toppings = const [
+    ('Extra Cheese 🧀', 1.50),
+    ('Spicy Jalapeños 🌶️', 0.80),
+    ('Garlic Dip 🧄', 0.50),
+    ('Crispy Bacon 🥓', 2.00),
+  ];
 
   @override
   void dispose() {
@@ -29,9 +37,16 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> {
   }
 
   double get _unitPrice {
-    if (_size == 'Large') return widget.food.price * 1.25;
-    if (_size == 'Small') return widget.food.price * 0.85;
-    return widget.food.price;
+    double base = widget.food.price;
+    if (_size == 'Large') base *= 1.25;
+    if (_size == 'Small') base *= 0.85;
+
+    for (final t in _toppings) {
+      if (_selectedToppings.contains(t.$1)) {
+        base += t.$2;
+      }
+    }
+    return base;
   }
 
   @override
@@ -216,6 +231,48 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> {
                                   fontWeight: FontWeight.w700,
                                 ),
                                 showCheckmark: false,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 18),
+                        const Text(
+                          'Add-ons & Toppings / គ្រឿងបន្ថែម',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _toppings.map((t) {
+                            final selected = _selectedToppings.contains(t.$1);
+                            return FilterChip(
+                              label: Text('${t.$1} (+\$${t.$2.toStringAsFixed(2)})'),
+                              selected: selected,
+                              onSelected: (val) {
+                                setState(() {
+                                  if (val) {
+                                    _selectedToppings.add(t.$1);
+                                  } else {
+                                    _selectedToppings.remove(t.$1);
+                                  }
+                                });
+                              },
+                              selectedColor: AppColors.emerald600,
+                              checkmarkColor: Colors.white,
+                              labelStyle: TextStyle(
+                                color: selected ? Colors.white : AppColors.textPrimary,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: BorderSide(
+                                  color: selected ? AppColors.emerald600 : AppColors.border,
+                                ),
                               ),
                             );
                           }).toList(),

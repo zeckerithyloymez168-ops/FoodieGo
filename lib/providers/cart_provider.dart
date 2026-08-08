@@ -75,15 +75,21 @@ class CartProvider extends ChangeNotifier {
   /// Returns true if promo applied.
   bool applyPromo(String code) {
     final c = code.trim().toUpperCase();
-    if (c == 'FOOD10') {
-      _promoCode = 'FOOD10';
-      _promoPercent = 10;
+    if (c == 'FOODIE30' || c == 'FOOD30') {
+      _promoCode = 'FOODIE30';
+      _promoPercent = 30;
       notifyListeners();
       return true;
     }
-    if (c == 'GREEN20') {
+    if (c == 'GREEN20' || c == 'FOOD20') {
       _promoCode = 'GREEN20';
       _promoPercent = 20;
+      notifyListeners();
+      return true;
+    }
+    if (c == 'FOOD10') {
+      _promoCode = 'FOOD10';
+      _promoPercent = 10;
       notifyListeners();
       return true;
     }

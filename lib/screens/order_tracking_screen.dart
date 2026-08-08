@@ -93,6 +93,142 @@ class OrderTrackingScreen extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(height: 18),
+          // Delivery Route Map Visualizer Card
+          Container(
+            height: 160,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.map_rounded, color: AppColors.emerald600, size: 18),
+                        SizedBox(width: 6),
+                        Text(
+                          'Live Route Tracker / តាមដានការដឹក',
+                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'ETA: 12-15 mins',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.emerald600,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Column(
+                      children: [
+                        Text('🏬', style: TextStyle(fontSize: 24)),
+                        SizedBox(height: 4),
+                        Text('Restaurant', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                    Expanded(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            height: 4,
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: AppColors.emerald100,
+                              borderRadius: BorderRadius.circular(999),
+                            ),
+                          ),
+                          Align(
+                            alignment: activeStep == 1
+                                ? Alignment.centerLeft
+                                : activeStep == 2
+                                    ? Alignment.center
+                                    : Alignment.centerRight,
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: const BoxDecoration(
+                                color: AppColors.emerald600,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Text('🛵', style: TextStyle(fontSize: 16)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Column(
+                      children: [
+                        Text('🏠', style: TextStyle(fontSize: 24)),
+                        SizedBox(height: 4),
+                        Text('Destination', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  ],
+                ),
+                const Spacer(),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          // Rider Profile Card
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Row(
+              children: [
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundColor: AppColors.emerald100,
+                  child: Text('🛵', style: TextStyle(fontSize: 20)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        order.riderName ?? 'Rider Sophat 🛵',
+                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+                      ),
+                      const Text(
+                        'Honda Dream 2024 · 1K-8899 (Phnom Penh)',
+                        style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => showAppSnack(context, 'Calling Rider Sophat (+855 92 111 222)...'),
+                  icon: const Icon(Icons.phone_rounded, color: AppColors.emerald600),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 24),
           if (order.status == OrderStatus.cancelled)
             Container(
