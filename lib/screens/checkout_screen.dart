@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
+import '../providers/language_provider.dart';
 import '../providers/notification_provider.dart';
 import '../providers/order_provider.dart';
 import '../theme/app_theme.dart';
+import 'addresses_screen.dart';
 import 'order_success_screen.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -35,9 +37,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final auth = context.read<AuthProvider>();
     final addr = auth.defaultAddress;
     _addressController = TextEditingController(
-      text: addr?.fullLine ?? 'Downtown Plaza, Suite 12',
+      text: addr?.fullLine ?? 'St 271, Sangkat Boeung Tumpun, Phnom Penh',
     );
-    _phoneController = TextEditingController(text: auth.phone);
+    _phoneController = TextEditingController(
+      text: addr?.phone.isNotEmpty == true ? addr!.phone : auth.phone,
+    );
   }
 
   @override
@@ -86,14 +90,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     final cart = context.watch<CartProvider>();
-    final addresses = context.watch<AuthProvider>().addresses;
+    final auth = context.watch<AuthProvider>();
+    final lang = context.watch<LanguageProvider>();
+    final addresses = auth.addresses;
+    final defaultAddr = auth.defaultAddress;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'Checkout',
-          style: TextStyle(fontWeight: FontWeight.w800),
+        title: Text(
+          lang.tr('checkout'),
+          style: const TextStyle(fontWeight: FontWeight.w800),
         ),
       ),
       body: Form(
@@ -101,31 +108,149 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const Text(
-              'Delivery details',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  lang.tr('delivery_address'),
+                  style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+                ),
+                TextButton.icon(
+                  onPressed: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AddressesScreen(),
+                      ),
+                    );
+                    if (mounted && auth.defaultAddress != null) {
+                      setState(() {
+                        _addressController.text = auth.defaultAddress!.fullLine;
+                        if (auth.defaultAddress!.phone.isNotEmpty) {
+                          _phoneController.text = auth.defaultAddress!.phone;
+                        }
+                      });
+                    }
+                  },
+                  icon: const Icon(Icons.edit_location_alt_outlined, size: 16),
+                  label: Text(
+                    lang.isKhmer ? 'កំណត់ក្នុង Profile' : 'Profile Addresses',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            if (addresses.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            // Profile address banner
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: AppColors.emerald50,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppColors.emerald600.withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.emerald600,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.home_work_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              defaultAddr?.label ?? 'Profile Address',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13,
+                                color: AppColors.emerald900,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.emerald600,
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Text(
+                                lang.isKhmer ? 'អាសយដ្ឋានក្នុង Profile' : 'Profile Default',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          defaultAddr?.fullLine ?? _addressController.text,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (addresses.length > 1) ...[
               const SizedBox(height: 10),
               SizedBox(
-                height: 42,
+                height: 40,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: addresses.length,
                   separatorBuilder: (_, _) => const SizedBox(width: 8),
                   itemBuilder: (_, i) {
                     final a = addresses[i];
+                    final isSelected = _addressController.text == a.fullLine;
                     return ActionChip(
+                      avatar: Icon(
+                        a.isDefault ? Icons.star_rounded : Icons.place_outlined,
+                        size: 14,
+                        color: isSelected ? Colors.white : AppColors.emerald700,
+                      ),
                       label: Text(a.label),
                       onPressed: () {
-                        _addressController.text = a.fullLine;
-                        _phoneController.text = a.phone;
-                        setState(() {});
+                        setState(() {
+                          _addressController.text = a.fullLine;
+                          _phoneController.text = a.phone;
+                        });
                       },
-                      backgroundColor: AppColors.emerald50,
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.emerald700,
+                      backgroundColor:
+                          isSelected ? AppColors.emerald600 : AppColors.emerald50,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 12,
+                        color: isSelected ? Colors.white : AppColors.emerald700,
                       ),
                     );
                   },
@@ -136,7 +261,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             TextFormField(
               controller: _addressController,
               decoration: _inputDecoration(
-                'Delivery address',
+                lang.tr('delivery_address'),
                 Icons.location_on_outlined,
               ),
               maxLines: 2,

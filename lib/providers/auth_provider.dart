@@ -47,7 +47,18 @@ class AuthProvider extends ChangeNotifier {
   List<Address> get addresses => List.unmodifiable(_addresses);
 
   Address? get defaultAddress {
-    if (_addresses.isEmpty) return null;
+    if (_addresses.isEmpty) {
+      _addresses.add(
+        const Address(
+          id: 'addr_default_1',
+          label: 'Home',
+          line1: 'St 271, Sangkat Boeung Tumpun',
+          city: 'Phnom Penh',
+          phone: '+855 12 345 678',
+          isDefault: true,
+        ),
+      );
+    }
     return _addresses.firstWhere(
       (a) => a.isDefault,
       orElse: () => _addresses.first,

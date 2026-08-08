@@ -3,20 +3,23 @@ import 'package:provider/provider.dart';
 
 import '../data/sample_data.dart';
 import '../models/food_item.dart';
+import '../models/order.dart';
+import '../providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
 import '../providers/catalog_provider.dart';
 import '../providers/language_provider.dart';
 import '../providers/notification_provider.dart';
-import '../models/order.dart';
 import '../providers/order_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/food_card.dart';
 import '../widgets/language_toggle_widget.dart';
 import '../widgets/network_image_box.dart';
+import 'addresses_screen.dart';
 import 'food_detail_screen.dart';
 import 'notifications_screen.dart';
 import 'order_tracking_screen.dart';
 import 'search_screen.dart';
+
 
 
 class HomeScreen extends StatefulWidget {
@@ -303,6 +306,9 @@ class _HomeScreenState extends State<HomeScreen> {
   // ---------------------------------------------------------------------------
   Widget _buildHeader(int cartCount, int unread) {
     final lang = context.watch<LanguageProvider>();
+    final auth = context.watch<AuthProvider>();
+    final currentAddr = auth.defaultAddress?.fullLine ?? 'Phnom Penh, Cambodia';
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
       child: Row(
@@ -332,11 +338,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                setState(() {
-                  _locationIndex =
-                      (_locationIndex + 1) % SampleData.locations.length;
-                });
-                _toast('${lang.tr('deliver_to')} ${SampleData.locations[_locationIndex]}');
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const AddressesScreen()),
+                );
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
@@ -370,7 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            SampleData.locations[_locationIndex],
+                            currentAddr,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
