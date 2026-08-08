@@ -29,6 +29,14 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       fontFamily: 'Roboto',
+      fontFamilyFallback: const [
+        'Kantumruy Pro',
+        'Khmer OS Battambang',
+        'Siemreap',
+        'Noto Sans Khmer',
+        'Khmer OS',
+        'sans-serif',
+      ],
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.emerald600,
         primary: AppColors.emerald600,
@@ -66,3 +74,4 @@ class AppTheme {
     );
   }
 }
+

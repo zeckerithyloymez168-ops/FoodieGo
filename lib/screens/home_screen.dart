@@ -151,6 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = context.watch<LanguageProvider>();
     final cart = context.watch<CartProvider>();
     final catalog = context.watch<CatalogProvider>();
     final unread = context.watch<NotificationProvider>().unreadCount;
@@ -213,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SliverToBoxAdapter(child: SizedBox(height: 22)),
             SliverToBoxAdapter(
               child: _sectionTitle(
-                'Categories',
+                lang.tr('categories'),
                 onSeeAll: () => _openSearch(),
               ),
             ),
@@ -223,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // ========== PROMO CAROUSEL ==========
             const SliverToBoxAdapter(child: SizedBox(height: 22)),
             SliverToBoxAdapter(
-              child: _sectionTitle('Offers for you', actionLabel: 'All deals'),
+              child: _sectionTitle(lang.tr('special_offers'), actionLabel: lang.tr('all_deals')),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 12)),
             SliverToBoxAdapter(child: _buildPromoCarousel()),
@@ -232,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SliverToBoxAdapter(child: SizedBox(height: 22)),
             SliverToBoxAdapter(
               child: _sectionTitle(
-                'Popular near you',
+                lang.tr('popular_now'),
                 onSeeAll: _openPizzaMenu,
               ),
             ),
@@ -243,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SliverToBoxAdapter(child: SizedBox(height: 22)),
             SliverToBoxAdapter(
               child: _sectionTitle(
-                'Featured kitchens',
+                lang.tr('featured_kitchens'),
                 onSeeAll: _openPizzaMenu,
               ),
             ),
@@ -254,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SliverToBoxAdapter(child: SizedBox(height: 22)),
             SliverToBoxAdapter(
               child: _sectionTitle(
-                'Best sellers',
+                lang.tr('best_sellers'),
                 onSeeAll: () => _openSearch(),
               ),
             ),
@@ -266,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SliverToBoxAdapter(child: SizedBox(height: 22)),
               SliverToBoxAdapter(
                 child: _sectionTitle(
-                  'Under \$10',
+                  lang.tr('under_10'),
                   onSeeAll: () => _openSearch(),
                 ),
               ),
@@ -278,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SliverToBoxAdapter(child: SizedBox(height: 22)),
             SliverToBoxAdapter(
               child: _sectionTitle(
-                'Recommended for you',
+                lang.tr('recommended'),
                 onSeeAll: () => _openSearch(),
               ),
             ),
@@ -453,6 +454,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSearchBar() {
+    final lang = context.watch<LanguageProvider>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -463,13 +465,13 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                 decoration: _whiteCard(radius: 18),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.search_rounded, color: AppColors.textMuted),
-                    SizedBox(width: 10),
+                    const Icon(Icons.search_rounded, color: AppColors.textMuted),
+                    const SizedBox(width: 10),
                     Text(
-                      'Search food, shops…',
-                      style: TextStyle(
+                      lang.tr('search_food'),
+                      style: const TextStyle(
                         color: AppColors.textMuted,
                         fontWeight: FontWeight.w500,
                         fontSize: 14,

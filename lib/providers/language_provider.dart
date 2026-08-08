@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../utils/app_translations.dart';
 
 class LanguageProvider extends ChangeNotifier {
-  Locale _locale = const Locale('en');
+  // Default to Khmer language ('km') for immediate Khmer display
+  Locale _locale = const Locale('km');
 
   Locale get locale => _locale;
   String get languageCode => _locale.languageCode;
