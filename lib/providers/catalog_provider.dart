@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 import '../data/sample_data.dart';
 import '../models/food_item.dart';
@@ -62,7 +63,9 @@ class CatalogProvider extends ChangeNotifier {
   Future<void> load() async {
     _loading = true;
     _error = null;
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
 
     try {
       final list = await _repo.fetchFoods();

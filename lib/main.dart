@@ -54,7 +54,7 @@ class FoodOrderApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => FavoritesProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
-        ChangeNotifierProvider(create: (_) => CatalogProvider()..load()),
+        ChangeNotifierProvider(create: (_) => CatalogProvider()),
       ],
       child: Consumer<LanguageProvider>(
         builder: (context, lang, child) {
