@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Emerald + white palette (eco-friendly food delivery look).
 class AppColors {
@@ -26,9 +27,12 @@ class AppColors {
 
 class AppTheme {
   static ThemeData get light {
+    final baseTextTheme = ThemeData.light().textTheme;
+    final kantumruyTheme = GoogleFonts.kantumruyProTextTheme(baseTextTheme);
+
     return ThemeData(
       useMaterial3: true,
-      fontFamily: 'Roboto',
+      fontFamily: GoogleFonts.kantumruyPro().fontFamily,
       fontFamilyFallback: const [
         'Kantumruy Pro',
         'Khmer OS Battambang',
@@ -37,6 +41,7 @@ class AppTheme {
         'Khmer OS',
         'sans-serif',
       ],
+      textTheme: kantumruyTheme,
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.emerald600,
         primary: AppColors.emerald600,
@@ -45,12 +50,12 @@ class AppTheme {
         brightness: Brightness.light,
       ),
       scaffoldBackgroundColor: AppColors.background,
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
         centerTitle: false,
-        titleTextStyle: TextStyle(
+        titleTextStyle: GoogleFonts.kantumruyPro(
           color: AppColors.textPrimary,
           fontSize: 20,
           fontWeight: FontWeight.w800,
@@ -65,7 +70,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          textStyle: const TextStyle(
+          textStyle: GoogleFonts.kantumruyPro(
             fontSize: 15,
             fontWeight: FontWeight.w800,
           ),
@@ -74,4 +79,5 @@ class AppTheme {
     );
   }
 }
+
 
